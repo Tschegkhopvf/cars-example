@@ -23,7 +23,6 @@ if (!is_null($id))
     }
 
     // Bind the params into our statement
-    
     $stmt->bindParam(':make', $make, PDO::PARAM_STR);
 
     // Execute the statment which will update the database
@@ -33,6 +32,17 @@ if (!is_null($id))
     header("Location: index.php");
     exit();    
 }
+// Filter the id which we are GETting from the query string (passed by index.php)
+$id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT); 
+
+// Prepare the statement
+$stmt = $dbh->prepare('SELECT * FROM makes WHERE id = :id');
+
+// Execute the statment and get the record
+$stmt->execute(['id' => $id]);
+
+// Fetch the data as an object
+$row = $stmt->fetch(PDO::FETCH_OBJ);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -63,41 +73,14 @@ if (!is_null($id))
         ?>
         <div class="container" style="margin-top: 60px;">
             <h1>Edit Car Make</h1>
-        <?php
-            try {
-                                     
-                // Prepare the statement
-                $stmt = $dbh->prepare('SELECT * FROM makes WHERE id = :id');
-                
-                // Filter the id which we are GETting from the query string (passed by index.php)
-                $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT); 
-                
-                // Bind the param into our statement
-                $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-                
-                // Execute the statment and get the record
-                $stmt->execute();        
-                
-                // Fetch the data as an object
-                $row = $stmt->fetch(PDO::FETCH_OBJ);
-                
-                ?>
-                <form action="edit.php" method="POST">
-                    <input type="hidden" name="id" value="<?php echo $row->id;?>">
-                  <div class="form-group">
-                    <label for="make">Make</label>
+            <form action="edit.php" method="POST">
+                <input type="hidden" name="id" value="<?php echo $row->id;?>">
+                    <div class="form-group">
+                        <label for="make">Make</label>
                     <input type="text" required class="form-control" id="make" name="make" placeholder="Make" value="<?php echo isset($row->make) ? $row->make : "";?>">
-                  </div>
-                  <button type="submit" class="btn btn-default">Submit</button>
-                </form>            
-                <?php
-                
-                $dbh = null;
-            } catch (PDOException $e) {
-                print "Error!: " . $e->getMessage() . "<br/>";
-                die();
-            }
-        ?>
+                </div>
+                <button type="submit" class="btn btn-default">Submit</button>
+            </form>            
     <?php
     // Include the footer file
     include "footer.php";
