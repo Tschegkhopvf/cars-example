@@ -1,6 +1,6 @@
 <?php
 // Include the common file containing the database connection
-include "common.php";
+require "common.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,35 +27,35 @@ include "common.php";
   <body>
         <?php
         // Include the header file
-        include "header.php";
+        require "header.php";
         ?>
         <div class="container" style="margin-top: 60px;">
             <h1>Car Makes</h1>
         <?php
 
-            try {                                
-                echo "<table class='table'>";
+        try {                                
+            echo "<table class='table'>";
+            echo "<tr>";
+            echo "<th>Make</th>";
+            echo "<td colspan='2'><a href='edit.php?id=0' class='btn btn-default'>Add</a></td>";
+            echo "</tr>";                
+            foreach ($dbh->query('SELECT * FROM makes ORDER BY make ASC') as $row) {
                 echo "<tr>";
-                echo "<th>Make</th>";
-                echo "<td colspan='2'><a href='edit.php?id=0' class='btn btn-default'>Add</a></td>";
-                echo "</tr>";                
-                foreach($dbh->query('SELECT * FROM makes ORDER BY make ASC') as $row) {
-                    echo "<tr>";
-                    echo "<td>". $row['make'] ."</td>";
-                    echo "<td><a href='edit.php?id=". $row['id'] ."' class='btn btn-default'>Edit</a></td>";
-                    echo "<td><a href='delete.php?id=". $row['id'] ."' class='btn btn-default'>Delete</a></td>";
-                    echo "</tr>";
-                }
-                echo "</table>";
-                $dbh = null;
-            } catch (PDOException $e) {
-                print "Error!: " . $e->getMessage() . "<br/>";
-                die();
+                echo "<td>". $row['make'] ."</td>";
+                echo "<td><a href='edit.php?id=". $row['id'] ."' class='btn btn-default'>Edit</a></td>";
+                echo "<td><a href='delete.php?id=". $row['id'] ."' class='btn btn-default'>Delete</a></td>";
+                echo "</tr>";
             }
+            echo "</table>";
+            $dbh = null;
+        } catch (PDOException $e) {
+            print "Error!: " . $e->getMessage() . "<br/>";
+            die();
+        }
         ?>
     <?php
     // Include the footer file
-    include "footer.php";
+    require "footer.php";
     ?>            
     </div>
 
@@ -65,3 +65,5 @@ include "common.php";
     <script src="js/bootstrap.min.js"></script>
   </body>
 </html>
+<?php
+// End of index.php

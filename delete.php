@@ -1,6 +1,6 @@
 <?php
 // Include the common file containing the database connection
-include "common.php";
+require "common.php";
 
 try {
 

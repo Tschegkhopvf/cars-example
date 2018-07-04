@@ -1,24 +1,20 @@
 <?php
 // Include the common file containing the database connection
-include "common.php";
+require "common.php";
 
 // Grab the POSTed id if any
 $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
 
 // If it's not null that means the form has been submitted
-if (!is_null($id))
-{
+if (!is_null($id)) {
     // Get the POSTed make
     $make = filter_input(INPUT_POST, 'make', FILTER_SANITIZE_STRING);
     
-    if ($id > 0)
-    {
+    if ($id > 0) {
         // Prepare the statement
         $stmt = $dbh->prepare('UPDATE makes SET make = :make WHERE id = :id');       
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-    }
-    else
-    {
+    } else {
         $stmt = $dbh->prepare("INSERT INTO makes (make) VALUES (:make)");
     }
 
@@ -69,7 +65,7 @@ $row = $stmt->fetch(PDO::FETCH_OBJ);
   <body>
         <?php
         // Include the header file
-        include "header.php";
+        require "header.php";
         ?>
         <div class="container" style="margin-top: 60px;">
             <h1>Edit Car Make</h1>
@@ -83,7 +79,7 @@ $row = $stmt->fetch(PDO::FETCH_OBJ);
             </form>            
     <?php
     // Include the footer file
-    include "footer.php";
+    require "footer.php";
     ?>            
     </div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -92,3 +88,5 @@ $row = $stmt->fetch(PDO::FETCH_OBJ);
     <script src="js/bootstrap.min.js"></script>
   </body>
 </html>
+<?php
+// End of edit.php
